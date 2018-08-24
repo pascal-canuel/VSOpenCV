@@ -14,4 +14,5 @@ Installation d'OpenCV dans Visual Studio 2017
 
 # Driver
 
-[Driver](https://www.theimagingsource.com/support/downloads-for-windows/device-drivers/icwdmgigetis/) de la caméra utilisée
+[Driver](https://www.theimagingsource.com/support/downloads-for-windows/device-drivers/icwdmgigetis/) de la caméra utilisée   
+Télécharger aussi le [kit de développement](https://www.theimagingsource.com/support/downloads-for-windows/software-development-kits-sdks/icimagingcontrol/) pour le .NET 
