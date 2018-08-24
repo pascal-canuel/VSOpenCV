@@ -10,3 +10,4 @@ Installation d'OpenCV dans Visual Studio 2017
 5. ![](pictures/3.PNG)
 6. ![](pictures/4.PNG)
 7. ![](pictures/5.PNG)
+8. ![](pictures/6.PNG)
