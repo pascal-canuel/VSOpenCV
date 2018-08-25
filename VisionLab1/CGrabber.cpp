@@ -11,7 +11,7 @@ void CGrabber::setColor(Mat pColor) {
 void CGrabber::getColor(Mat pColor) {
 	// Check if red is present in the picture
 	bool isRed = false; 
-	_nbImage = 0;
+	
 
 	for (int i = 0; i < pColor.rows; i++) {
 		for (int j = 0; j < pColor.cols; j++) {
@@ -31,7 +31,31 @@ void CGrabber::getColor(Mat pColor) {
 		cout << "Red!";
 
 		imshow("its red looolll", pColor);
-		_nbImage++;
+	}
+}
+
+void CGrabber::getHSV(Mat pColor) {
+	Mat hsv;
+	cvtColor(pColor, hsv, COLOR_BGR2HSV);
+	bool isRed = false;
+
+	for (int i = 0; i < hsv.rows; i++) {
+		for (int j = 0; j < hsv.cols; j++) {
+			if ((int)hsv.at<Vec3b>(i, j)[0] > 160 || (int)hsv.at<Vec3b>(i, j)[0] < 5) {
+				isRed = true;
+			}				
+			else {
+				pColor.at<Vec3b>(i, j)[2] = 0;
+				pColor.at<Vec3b>(i, j)[1] = 0;
+				pColor.at<Vec3b>(i, j)[0] = 0;
+			}
+		}
+	}
+
+	if (isRed) {
+		cout << "";
+
+		imshow("Color detected", pColor);
 	}
 }
 

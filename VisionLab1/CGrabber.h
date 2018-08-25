@@ -10,6 +10,7 @@ class CGrabber {
 public:
 	void setColor(Mat pColor);
 	void getColor(Mat pColor);
+	void getHSV(Mat pColor);
 	CGrabber();  // This is the constructor
 private:
 	Mat _color;
