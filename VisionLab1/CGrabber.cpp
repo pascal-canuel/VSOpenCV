@@ -2,6 +2,11 @@
 #include "CGrabber.h"
 #include "range.h"
 
+// Links 
+//	https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html
+// https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
+// https://www.opencv-srf.com/2010/09/object-detection-using-color-seperation.html
+
 CGrabber::CGrabber(void) {
 	iLowH = 0;
 	iHighH = 179;
@@ -56,6 +61,7 @@ void CGrabber::getHSV(Mat pFrame) {
 			}
 			else
 				isColor = false;
+
 		}
 	}
 
