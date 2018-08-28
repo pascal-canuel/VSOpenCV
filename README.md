@@ -22,4 +22,4 @@ Télécharger aussi le [kit de développement](https://www.theimagingsource.com/
 
 # Showcase
 
-![](pictures/colourContour.PNG)
+![](contourColor.PNG)
