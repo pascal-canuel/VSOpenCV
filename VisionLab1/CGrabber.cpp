@@ -38,8 +38,8 @@ void CGrabber::getHSV() {
 	std::vector<range>::iterator it;
 
 	it = colorToDetect.begin();
-	it = colorToDetect.insert(it, range(Scalar(0, 70, 50), Scalar(10, 255, 255), Scalar(0, 0, 255)));		//	Red
-	it = colorToDetect.insert(it, range(Scalar(160, 70, 50), Scalar(178, 255, 255), Scalar(0, 0, 255)));	//	Red
+	it = colorToDetect.insert(it, range(Scalar(0, 150, 60), Scalar(10, 255, 255), Scalar(0, 0, 255)));		//	Red
+	it = colorToDetect.insert(it, range(Scalar(170, 150, 60), Scalar(178, 255, 255), Scalar(0, 0, 255)));	//	Red
 	it = colorToDetect.insert(it, range(Scalar(22, 70, 50), Scalar(37, 255, 255), Scalar(0, 255, 255)));	//	Yellow
 	it = colorToDetect.insert(it, range(Scalar(38, 70, 50), Scalar(75, 255, 255), Scalar(0, 255, 0)));		//	Green
 	it = colorToDetect.insert(it, range(Scalar(75, 70, 50), Scalar(130, 255, 255), Scalar(255, 0, 0)));		//	Blue
