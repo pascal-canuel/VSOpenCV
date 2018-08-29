@@ -13,7 +13,8 @@ private:
 	std::tuple<cv::Mat, cv::Mat> drawColorScalar(std::vector<range>::iterator pIt);
 
 	cv::Mat initFrame;
-	
+	cv::Mat hsvFrame;
+
 	int iLowH;
 	int iHighH;
 

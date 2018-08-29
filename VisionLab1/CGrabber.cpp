@@ -20,6 +20,7 @@ CGrabber::CGrabber(Mat pColor) {
 	iHighV = 255;
 
 	initFrame = pColor;
+	cvtColor(initFrame, hsvFrame, COLOR_BGR2HSV);
 
 	std::cout << "Loaded" << std::endl;
 }
@@ -32,18 +33,16 @@ CGrabber::CGrabber(Mat pColor) {
 //	Violet 130 - 160
 //	Red 160 - 179
 void CGrabber::getHSV() {
-	Mat3b hsv;
-	cvtColor(initFrame, hsv, COLOR_BGR2HSV);
 
 	std::vector<range> colorToDetect;
 	std::vector<range>::iterator it;
 
 	it = colorToDetect.begin();
-	//it = colorToDetect.insert(it, range(Scalar(0, 70, 50), Scalar(10, 255, 255), Scalar(0, 0, 255)));		//	Red
-	it = colorToDetect.insert(it, range(Scalar(160, 70, 50), Scalar(180, 255, 255), Scalar(0, 0, 255)));	//	Red
-	//it = colorToDetect.insert(it, range(Scalar(22, 70, 50), Scalar(37, 255, 255), Scalar(0, 255, 255)));	//	Yellow
-	//it = colorToDetect.insert(it, range(Scalar(38, 70, 50), Scalar(75, 255, 255), Scalar(0, 255, 0)));		//	Green
-	//it = colorToDetect.insert(it, range(Scalar(75, 70, 50), Scalar(130, 255, 255), Scalar(255, 0, 0)));		//	Blue
+	it = colorToDetect.insert(it, range(Scalar(0, 70, 50), Scalar(10, 255, 255), Scalar(0, 0, 255)));		//	Red
+	it = colorToDetect.insert(it, range(Scalar(160, 70, 50), Scalar(178, 255, 255), Scalar(0, 0, 255)));	//	Red
+	it = colorToDetect.insert(it, range(Scalar(22, 70, 50), Scalar(37, 255, 255), Scalar(0, 255, 255)));	//	Yellow
+	it = colorToDetect.insert(it, range(Scalar(38, 70, 50), Scalar(75, 255, 255), Scalar(0, 255, 0)));		//	Green
+	it = colorToDetect.insert(it, range(Scalar(75, 70, 50), Scalar(130, 255, 255), Scalar(255, 0, 0)));		//	Blue
 
 	Mat result, drawingResult;
 	for (it = colorToDetect.begin(); it < colorToDetect.end(); it++) {
@@ -74,7 +73,7 @@ void CGrabber::getHSV() {
 std::tuple<cv::Mat, cv::Mat> CGrabber::drawColorScalar(std::vector<range>::iterator pIt)
 {
 	Mat currentFrame;
-	inRange(initFrame, pIt->minScalar, pIt->maxScalar, currentFrame);
+	inRange(hsvFrame, pIt->minScalar, pIt->maxScalar, currentFrame);
 	
 	//	Make object more intense
 	erode(currentFrame, currentFrame, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
