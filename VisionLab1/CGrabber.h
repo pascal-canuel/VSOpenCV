@@ -1,16 +1,19 @@
 #pragma once
 #include "pch.h"
+#include "range.h"
 #include <opencv2/opencv.hpp>
 
-using namespace std;
 using namespace cv;
-
 
 class CGrabber {
 public:
-	void getHSV(Mat pFrame);
-	CGrabber();  // This is the constructor
+	void getHSV();
+	CGrabber(cv::Mat pFrame);  // This is the constructor
 private:
+	std::tuple<cv::Mat, cv::Mat> drawColorScalar(std::vector<range>::iterator pIt);
+
+	cv::Mat initFrame;
+	
 	int iLowH;
 	int iHighH;
 

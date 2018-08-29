@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "range.h"
 
-range::range(int pMin, int pMax) {
-	min = pMin;
-	max = pMax;
+range::range(cv::Scalar pMinScalar, cv::Scalar pMaxScalar, cv::Scalar pBgrScalar) {
+	minScalar = pMinScalar;
+	maxScalar = pMaxScalar;
+	bgrScalar = pBgrScalar;
 }

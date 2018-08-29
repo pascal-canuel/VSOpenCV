@@ -1,13 +1,15 @@
 #include "pch.h"
 #include "CGrabber.h"
 #include "range.h"
+#include <map>
 
+RNG rng(12345);
 // Links 
 //	https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html
 // https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
 // https://www.opencv-srf.com/2010/09/object-detection-using-color-seperation.html
 
-CGrabber::CGrabber(void) {
+CGrabber::CGrabber(Mat pColor) {
 	iLowH = 0;
 	iHighH = 179;
 
@@ -17,7 +19,9 @@ CGrabber::CGrabber(void) {
 	iLowV = 0;
 	iHighV = 255;
 
-	cout << "Loaded" << endl;
+	initFrame = pColor;
+
+	std::cout << "Loaded" << std::endl;
 }
 
 //	Hue values range 
@@ -27,43 +31,67 @@ CGrabber::CGrabber(void) {
 //	Blue 75 - 130
 //	Violet 130 - 160
 //	Red 160 - 179
-void CGrabber::getHSV(Mat pFrame) {
-	Mat hsvFrame;
-	cvtColor(pFrame, hsvFrame, COLOR_BGR2HSV);
+void CGrabber::getHSV() {
+	Mat3b hsv;
+	cvtColor(initFrame, hsv, COLOR_BGR2HSV);
 
-	bool isColor = false;
-
-
-	vector<range> colorToDetect;
-	vector<range>::iterator it;
+	std::vector<range> colorToDetect;
+	std::vector<range>::iterator it;
 
 	it = colorToDetect.begin();
-	it = colorToDetect.insert(it, range(38, 75));	//	Green
-	it = colorToDetect.insert(it, range(76, 130));	//	Blue
-	it = colorToDetect.insert(it, range(160, 179)); //	Red
+	//it = colorToDetect.insert(it, range(Scalar(0, 70, 50), Scalar(10, 255, 255), Scalar(0, 0, 255)));		//	Red
+	it = colorToDetect.insert(it, range(Scalar(160, 70, 50), Scalar(180, 255, 255), Scalar(0, 0, 255)));	//	Red
+	//it = colorToDetect.insert(it, range(Scalar(22, 70, 50), Scalar(37, 255, 255), Scalar(0, 255, 255)));	//	Yellow
+	//it = colorToDetect.insert(it, range(Scalar(38, 70, 50), Scalar(75, 255, 255), Scalar(0, 255, 0)));		//	Green
+	//it = colorToDetect.insert(it, range(Scalar(75, 70, 50), Scalar(130, 255, 255), Scalar(255, 0, 0)));		//	Blue
 
-	for (int y = 0; y < pFrame.rows; y++) {
-		for (int x = 0; x < pFrame.cols; x++) {		
-			Vec3b hsvPix = hsvFrame.at<Vec3b>(y, x);
-			Vec3b *pix = &pFrame.at<Vec3b>(y , x);
-
-			int hue = (int)hsvPix.val[0];		
-			
-			for (it = colorToDetect.begin(); it < colorToDetect.end(); it++) {
-				if (it->min < hue && hue < it->max) {
-					isColor = true;
-				}		
-			}	
-			if (!isColor) {
-				pix->val[0] = 0;
-				pix->val[1] = 0;
-				pix->val[2] = 0;
-			}
-			else
-				isColor = false;
-
+	Mat result, drawingResult;
+	for (it = colorToDetect.begin(); it < colorToDetect.end(); it++) {
+	
+		Mat binary;
+		Mat colored;
+		std::tie(binary, colored) = drawColorScalar(it);
+		if (it == colorToDetect.begin())
+		{
+			result = binary;
+			drawingResult = colored;
+		}
+		else
+		{
+			result = result | binary;
+			drawingResult = drawingResult | colored;
 		}
 	}
 
-	imshow("ColorView", pFrame);
+	namedWindow("Threshed", WINDOW_NORMAL);
+	resizeWindow("Threshed", 700, 500);
+	imshow("Threshed", result);
+	
+	namedWindow("Contours");
+	imshow("Contours", drawingResult);
+}
+
+std::tuple<cv::Mat, cv::Mat> CGrabber::drawColorScalar(std::vector<range>::iterator pIt)
+{
+	Mat currentFrame;
+	inRange(initFrame, pIt->minScalar, pIt->maxScalar, currentFrame);
+	
+	//	Make object more intense
+	erode(currentFrame, currentFrame, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+	dilate(currentFrame, currentFrame, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+
+	//	Remove small holes from the background
+	dilate(currentFrame, currentFrame, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+	erode(currentFrame, currentFrame, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)));
+
+	std::vector<Vec4i> hierarchy;
+	std::vector<std::vector<Point> > contours;
+	findContours(currentFrame, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	Mat drawing = Mat::zeros(currentFrame.size(), CV_8UC3);
+	for (int i = 0; i < contours.size(); i++)
+	{		
+		drawContours(drawing, contours, i, pIt->bgrScalar, 2, 8, hierarchy, 0, Point());
+	}
+
+	return std::pair<Mat, Mat>(currentFrame, drawing);
 }

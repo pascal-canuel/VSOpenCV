@@ -1,8 +1,11 @@
 #pragma once
+#include <opencv2/opencv.hpp>
 
-struct range {
-	int min;
-	int max;
-
-	range(int pMin, int pMax);	
+class range {
+public:
+	cv::Scalar minScalar;
+	cv::Scalar maxScalar;
+	cv::Scalar bgrScalar;
+	
+	range(cv::Scalar pMinScalar, cv::Scalar pMaxScalar, cv::Scalar pBgrScalar);
 };
