@@ -38,11 +38,11 @@ void CGrabber::getHSV() {
 	std::vector<range>::iterator it;
 
 	it = colorToDetect.begin();
-	it = colorToDetect.insert(it, range(Scalar(0, 150, 60), Scalar(10, 255, 255), Scalar(0, 0, 255)));		//	Red
-	it = colorToDetect.insert(it, range(Scalar(170, 150, 60), Scalar(178, 255, 255), Scalar(0, 0, 255)));	//	Red
-	it = colorToDetect.insert(it, range(Scalar(22, 70, 50), Scalar(37, 255, 255), Scalar(0, 255, 255)));	//	Yellow
-	it = colorToDetect.insert(it, range(Scalar(38, 70, 50), Scalar(75, 255, 255), Scalar(0, 255, 0)));		//	Green
-	it = colorToDetect.insert(it, range(Scalar(75, 70, 50), Scalar(130, 255, 255), Scalar(255, 0, 0)));		//	Blue
+	it = colorToDetect.insert(it, range(Scalar(0, 150, 60), Scalar(10, 255, 255), Scalar(0, 0, 255), "Light Red"));		//	Red
+	it = colorToDetect.insert(it, range(Scalar(170, 150, 60), Scalar(178, 255, 255), Scalar(0, 0, 255), "Red"));	//	Red
+	it = colorToDetect.insert(it, range(Scalar(22, 70, 50), Scalar(37, 255, 255), Scalar(0, 255, 255), "Yellow"));	//	Yellow
+	it = colorToDetect.insert(it, range(Scalar(38, 70, 50), Scalar(75, 255, 255), Scalar(0, 255, 0), "Green"));		//	Green
+	it = colorToDetect.insert(it, range(Scalar(75, 70, 50), Scalar(130, 255, 255), Scalar(255, 0, 0), "Blue"));		//	Blue
 
 	Mat result, drawingResult;
 	for (it = colorToDetect.begin(); it < colorToDetect.end(); it++) {
@@ -72,6 +72,8 @@ void CGrabber::getHSV() {
 
 std::tuple<cv::Mat, cv::Mat> CGrabber::drawColorScalar(std::vector<range>::iterator pIt)
 {
+	double init = (double)cv::getTickCount();
+
 	Mat currentFrame;
 	inRange(hsvFrame, pIt->minScalar, pIt->maxScalar, currentFrame);
 	
@@ -91,6 +93,9 @@ std::tuple<cv::Mat, cv::Mat> CGrabber::drawColorScalar(std::vector<range>::itera
 	{		
 		drawContours(drawing, contours, i, pIt->bgrScalar, 2, 8, hierarchy, 0, Point());
 	}
+
+	double sec = ((double)cv::getTickCount() - init) / cv::getTickFrequency();
+	std::cout << pIt->nameColor << " " << sec << " sec" << std::endl;
 
 	return std::pair<Mat, Mat>(currentFrame, drawing);
 }

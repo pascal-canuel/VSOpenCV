@@ -6,6 +6,7 @@ public:
 	cv::Scalar minScalar;
 	cv::Scalar maxScalar;
 	cv::Scalar bgrScalar;
-	
-	range(cv::Scalar pMinScalar, cv::Scalar pMaxScalar, cv::Scalar pBgrScalar);
+	std::string nameColor;
+
+	range(cv::Scalar pMinScalar, cv::Scalar pMaxScalar, cv::Scalar pBgrScalar, std::string pNameColor);
 };
