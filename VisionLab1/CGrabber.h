@@ -7,8 +7,8 @@ using namespace cv;
 
 class CGrabber {
 public:
-	void getHSV();
-	CGrabber(cv::Mat pFrame);  // This is the constructor
+	void getHSV(cv::Mat pFrame);
+	CGrabber();  // This is the constructor
 private:
 	std::tuple<cv::Mat, cv::Mat> drawColorScalar(std::vector<range>::iterator pIt);
 
